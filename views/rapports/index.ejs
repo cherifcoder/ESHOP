@@ -1,0 +1,138 @@
+<%- include('../partials/header', {title: title}) %>
+<div class="app-container">
+  <%- include('../partials/sidebar') %>
+  <main class="main-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        <h1>Rapports & Graphiques</h1>
+        <p>Analyse des performances sur différentes périodes</p>
+      </div>
+    </header>
+
+    <div class="kpi-grid">
+      <div class="kpi-card green" style="cursor:pointer" onclick="window.location='/rapports/details/ca'">
+        <div class="kpi-icon"><i class="fas fa-chart-line"></i></div>
+        <div class="kpi-info">
+          <h3><%= caMois.toLocaleString() %> UM</h3>
+          <p>CA du Mois <small>(cliquez pour détails)</small></p>
+        </div>
+      </div>
+      <div class="kpi-card orange" style="cursor:pointer" onclick="window.location='/rapports/details/benefice'">
+        <div class="kpi-icon"><i class="fas fa-coins"></i></div>
+        <div class="kpi-info">
+          <h3><%= beneficeMois.toLocaleString() %> UM</h3>
+          <p>Bénéfice Brut <small>(cliquez pour détails)</small></p>
+        </div>
+      </div>
+      <div class="kpi-card red" style="cursor:pointer" onclick="window.location='/depenses'">
+        <div class="kpi-icon"><i class="fas fa-arrow-down"></i></div>
+        <div class="kpi-info">
+          <h3><%= totalDepenses.toLocaleString() %> UM</h3>
+          <p>Dépenses <small>(cliquez pour détails)</small></p>
+        </div>
+      </div>
+      <div class="kpi-card purple" style="cursor:pointer" onclick="window.location='/rapports/details/benefice-net'">
+        <div class="kpi-icon"><i class="fas fa-wallet"></i></div>
+        <div class="kpi-info">
+          <h3><%= beneficeNet.toLocaleString() %> UM</h3>
+          <p>Bénéfice Net <small>(Bénéfice Brut - Dépenses)</small></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header">
+        <h3><i class="fas fa-filter"></i> Filtrer les ventes par période</h3>
+      </div>
+      <div style="padding:25px;display:flex;gap:15px;flex-wrap:wrap;align-items:end">
+        <button class="btn btn-primary" onclick="loadVentes('semaine')">1 Semaine</button>
+        <button class="btn btn-info" onclick="loadVentes('mois')">1 Mois</button>
+        <button class="btn btn-warning" onclick="loadVentes('trimestre')">1 Trimestre</button>
+        <button class="btn btn-success" onclick="loadVentes('annee')">1 An</button>
+        <div class="form-group" style="margin:0">
+          <label>Du</label>
+          <input type="date" id="dateDebut">
+        </div>
+        <div class="form-group" style="margin:0">
+          <label>Au</label>
+          <input type="date" id="dateFin">
+        </div>
+        <button class="btn btn-danger" onclick="loadVentes('custom')">Appliquer</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header">
+        <h3><i class="fas fa-chart-bar"></i> Résultats</h3>
+      </div>
+      <div style="padding:25px">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px">
+          <div style="text-align:center;padding:20px;background:#f0f9ff;border-radius:10px">
+            <h4 style="color:#0369a1">Nombre de ventes</h4>
+            <p style="font-size:32px;font-weight:bold;color:#0369a1" id="nbVentes">-</p>
+          </div>
+          <div style="text-align:center;padding:20px;background:#f0fdf4;border-radius:10px">
+            <h4 style="color:#166534">Chiffre d'affaires</h4>
+            <p style="font-size:24px;font-weight:bold;color:#166534" id="caPeriode">-</p>
+          </div>
+          <div style="text-align:center;padding:20px;background:#fef3c7;border-radius:10px">
+            <h4 style="color:#92400e">Bénéfice</h4>
+            <p style="font-size:24px;font-weight:bold;color:#92400e" id="benefPeriode">-</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header">
+        <h3><i class="fas fa-chart-line"></i> Graphique des ventes</h3>
+      </div>
+      <div style="padding:25px">
+        <canvas id="salesChart" height="100"></canvas>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+let chart;
+async function loadVentes(type) {
+  let url = '/rapports/api/ventes?type=' + type;
+  if(type === 'custom') {
+    const debut = document.getElementById('dateDebut').value;
+    const fin = document.getElementById('dateFin').value;
+    if(!debut || !fin) return alert('Sélectionnez les dates');
+    url += '&debut=' + debut + '&fin=' + fin;
+  }
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
+    document.getElementById('nbVentes').textContent = data.count;
+    document.getElementById('caPeriode').textContent = data.ca.toLocaleString() + ' UM';
+    document.getElementById('benefPeriode').textContent = data.benefice.toLocaleString() + ' UM';
+    if(chart) chart.destroy();
+    const ctx = document.getElementById('salesChart').getContext('2d');
+    chart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: data.labels,
+        datasets: [{
+          label: 'Chiffre d\'affaires (UM)',
+          data: data.values,
+          backgroundColor: '#2563eb'
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: { beginAtZero: true }
+        }
+      }
+    });
+  } catch(e) {
+    console.error(e);
+  }
+}
+loadVentes('mois');
+</script>
+<%- include('../partials/footer') %>

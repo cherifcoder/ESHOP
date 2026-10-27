@@ -1,0 +1,156 @@
+<%- include('../partials/header', {title: title}) %>
+<div class="app-container">
+  <%- include('../partials/sidebar') %>
+  <main class="main-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        <h1>Nouvelle Vente</h1>
+        <p>Vente au comptant ou à crédit</p>
+      </div>
+      <div class="topbar-right">
+        <a href="/ventes" class="btn" style="background:#64748b;color:white"><i class="fas fa-arrow-left"></i> Historique</a>
+      </div>
+    </header>
+
+    <form action="/ventes/nouvelle" method="POST">
+      <div class="panel">
+        <div class="panel-header">
+          <h3><i class="fas fa-info-circle"></i> Informations Vente</h3>
+        </div>
+        <div style="padding:25px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px">
+          <div class="form-group">
+            <label>Client</label>
+            <select name="clientId">
+              <option value="">Client anonyme</option>
+              <% clients.forEach(c => { %>
+                <option value="<%= c._id %>"><%= c.prenom %> <%= c.nom %> - <%= c.telephone %></option>
+              <% }) %>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Type de Vente *</label>
+            <select name="typeVente" required>
+              <option value="COMPTANT">COMPTANT</option>
+              <option value="CREDIT">À CRÉDIT</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Mode de Paiement</label>
+            <select name="modePaiement">
+              <option value="ESPECES">Espèces</option>
+              <option value="MOBILE_MONEY">Mobile Money</option>
+              <option value="CARTE">Carte</option>
+              <option value="CHEQUE">Chèque</option>
+              <option value="AUTRE">Autre</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <h3><i class="fas fa-shopping-cart"></i> Articles</h3>
+        </div>
+        <div style="padding:25px">
+          <div id="lignes">
+            <div class="ligne" style="display:grid;grid-template-columns:3fr 1fr 1fr 1fr auto;gap:10px;margin-bottom:10px;align-items:end">
+              <div class="form-group" style="margin:0">
+                <label>Article</label>
+                <select name="lignes[0][articleId]" required onchange="updatePrix(this, 0)">
+                  <option value="">-- Sélectionner --</option>
+                  <% articles.forEach(a => { %>
+                    <option value="<%= a._id %>" data-prix="<%= a.prixVente %>"><%= a.reference %> - <%= a.designation %> (Stock: <%= a.stockActuel %>)</option>
+                  <% }) %>
+                </select>
+              </div>
+              <div class="form-group" style="margin:0">
+                <label>Quantité</label>
+                <input type="number" name="lignes[0][quantite]" min="1" value="1" required oninput="calculer()">
+              </div>
+              <div class="form-group" style="margin:0">
+                <label>Prix Unitaire</label>
+                <input type="number" id="prix_0" value="0" readonly>
+              </div>
+              <div class="form-group" style="margin:0">
+                <label>Montant</label>
+                <input type="number" id="montant_0" value="0" readonly>
+              </div>
+            </div>
+          </div>
+          <button type="button" class="btn btn-success" onclick="ajouterLigne()"><i class="fas fa-plus"></i> Ajouter une ligne</button>
+        </div>
+      </div>
+
+      <div class="panel" style="max-width:400px;margin-left:auto">
+        <div class="panel-header">
+          <h3><i class="fas fa-calculator"></i> Total</h3>
+        </div>
+        <div style="padding:25px">
+          <div class="form-group">
+            <label>Remise (UM)</label>
+            <input type="number" name="remise" value="0" min="0" oninput="calculer()">
+          </div>
+          <div style="border-top:2px solid var(--border);padding-top:15px;margin-top:15px">
+            <p style="display:flex;justify-content:space-between;font-size:18px;font-weight:bold"><span>TOTAL À PAYER:</span> <span id="total">0 UM</span></p>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width:100%;margin-top:15px;padding:14px"><i class="fas fa-check-circle"></i> VALIDER LA VENTE</button>
+        </div>
+      </div>
+    </form>
+  </main>
+</div>
+
+<script>
+let ligneIndex = 1;
+function ajouterLigne() {
+  const div = document.createElement('div');
+  div.className = 'ligne';
+  div.style = 'display:grid;grid-template-columns:3fr 1fr 1fr 1fr auto;gap:10px;margin-bottom:10px;align-items:end';
+  div.innerHTML = `
+    <div class="form-group" style="margin:0">
+      <select name="lignes[${ligneIndex}][articleId]" required onchange="updatePrix(this, ${ligneIndex})">
+        <option value="">-- Sélectionner --</option>
+        <% articles.forEach(a => { %>
+          <option value="<%= a._id %>" data-prix="<%= a.prixVente %>"><%= a.reference %> - <%= a.designation %> (Stock: <%= a.stockActuel %>)</option>
+        <% }) %>
+      </select>
+    </div>
+    <div class="form-group" style="margin:0">
+      <input type="number" name="lignes[${ligneIndex}][quantite]" min="1" value="1" required oninput="calculer()">
+    </div>
+    <div class="form-group" style="margin:0">
+      <input type="number" id="prix_${ligneIndex}" value="0" readonly>
+    </div>
+    <div class="form-group" style="margin:0">
+      <input type="number" id="montant_${ligneIndex}" value="0" readonly>
+    </div>
+    <button type="button" class="btn btn-danger" style="padding:10px" onclick="this.parentElement.remove();calculer()"><i class="fas fa-times"></i></button>
+  `;
+  document.getElementById('lignes').appendChild(div);
+  ligneIndex++;
+}
+
+function updatePrix(select, idx) {
+  const opt = select.options[select.selectedIndex];
+  const prix = opt.dataset.prix || 0;
+  document.getElementById('prix_' + idx).value = prix;
+  calculer();
+}
+
+function calculer() {
+  let total = 0;
+  document.querySelectorAll('.ligne').forEach((ligne, idx) => {
+    const select = ligne.querySelector('select');
+    const qty = ligne.querySelector('input[name*="quantite"]').value || 0;
+    const prix = document.getElementById('prix_' + idx).value || 0;
+    const montant = qty * prix;
+    document.getElementById('montant_' + idx).value = montant;
+    total += montant;
+  });
+  const remise = document.querySelector('input[name="remise"]').value || 0;
+  total = total - remise;
+  if(total < 0) total = 0;
+  document.getElementById('total').textContent = total.toLocaleString() + ' UM';
+}
+</script>
+<%- include('../partials/footer') %>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Articles - Gestion Boutique</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-store"></i>
+                <h2>Gestion Boutique</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Tableau de bord</span>
+                </a>
+                
+                <div class="nav-section">Gestion</div>
+                <a href="articles.html" class="nav-item active">
+                    <i class="fas fa-box"></i>
+                    <span>Articles</span>
+                </a>
+                <a href="clients.html" class="nav-item">
+                    <i class="fas fa-users"></i>
+                    <span>Clients</span>
+                </a>
+                <a href="ventes.html" class="nav-item">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Ventes</span>
+                </a>
+                <a href="depenses.html" class="nav-item">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <span>Dépenses</span>
+                </a>
+                
+                <div class="nav-section">Rapports</div>
+                <a href="rapports.html" class="nav-item">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Rapports & Graphiques</span>
+                </a>
+                
+                <div class="nav-section admin-only" id="adminSection" style="display: none;">
+                    <div class="nav-section">Administration</div>
+                    <a href="utilisateurs.html" class="nav-item">
+                        <i class="fas fa-user-cog"></i>
+                        <span>Utilisateurs</span>
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <h1>Gestion des Articles</h1>
+                <div class="user-info">
+                    <span id="userName"></span>
+                    <button class="btn-logout" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Déconnexion
+                    </button>
+                </div>
+            </header>
+
+            <!-- Table -->
+            <div class="table-container">
+                <div class="table-header">
+                    <h2>Liste des Articles</h2>
+                    <button class="btn-primary" onclick="openArticleModal()">
+                        <i class="fas fa-plus"></i> Ajouter un article
+                    </button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Référence</th>
+                            <th>Nom</th>
+                            <th>Catégorie</th>
+                            <th>Quantité</th>
+                            <th>Prix d'achat</th>
+                            <th>Prix de vente</th>
+                            <th>Marge</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="articlesTable">
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal Article -->
+    <div id="articleModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Ajouter un Article</h2>
+                <button class="close-btn" onclick="closeArticleModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="articleId">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="articleRef">Référence *</label>
+                        <input type="text" id="articleRef" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="articleNom">Nom *</label>
+                        <input type="text" id="articleNom" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="articleCategorie">Catégorie</label>
+                        <input type="text" id="articleCategorie">
+                    </div>
+                    <div class="form-group">
+                        <label for="articleQuantite">Quantité en stock *</label>
+                        <input type="number" id="articleQuantite" required min="0">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="articlePrixAchat">Prix d'achat (FCFA) *</label>
+                        <input type="number" id="articlePrixAchat" required min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="articlePrixVente">Prix de vente (FCFA) *</label>
+                        <input type="number" id="articlePrixVente" required min="0">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="articleDescription">Description</label>
+                    <input type="text" id="articleDescription">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeArticleModal()">Annuler</button>
+                <button class="btn-primary" onclick="saveArticle()">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/articles.js"></script>
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de Bord - Gestion Boutique</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-store"></i>
+                <h2>Gestion Boutique</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item active">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Tableau de bord</span>
+                </a>
+                
+                <div class="nav-section">Gestion</div>
+                <a href="articles.html" class="nav-item">
+                    <i class="fas fa-box"></i>
+                    <span>Articles</span>
+                </a>
+                <a href="clients.html" class="nav-item">
+                    <i class="fas fa-users"></i>
+                    <span>Clients</span>
+                </a>
+                <a href="ventes.html" class="nav-item">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Ventes</span>
+                </a>
+                <a href="depenses.html" class="nav-item">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <span>Dépenses</span>
+                </a>
+                
+                <div class="nav-section">Rapports</div>
+                <a href="rapports.html" class="nav-item">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Rapports & Graphiques</span>
+                </a>
+                
+                <div class="nav-section admin-only" id="adminSection" style="display: none;">
+                    <div class="nav-section">Administration</div>
+                    <a href="utilisateurs.html" class="nav-item">
+                        <i class="fas fa-user-cog"></i>
+                        <span>Utilisateurs</span>
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <h1>Tableau de Bord</h1>
+                <div class="user-info">
+                    <span id="userName"></span>
+                    <button class="btn-logout" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Déconnexion
+                    </button>
+                </div>
+            </header>
+
+            <!-- Cards -->
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-icon blue">
+                        <i class="fas fa-box"></i>
+                    </div>
+                    <div class="card-info">
+                        <h3 id="totalArticles">0</h3>
+                        <p>Articles</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-icon green">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <div class="card-info">
+                        <h3 id="totalVentes">0</h3>
+                        <p>Ventes du jour</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-icon orange">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <div class="card-info">
+                        <h3 id="chiffreAffaires">0 FCFA</h3>
+                        <p>Chiffre d'affaires du jour</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-icon red">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="card-info">
+                        <h3 id="beneficeJour">0 FCFA</h3>
+                        <p>Bénéfice du jour</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ventes récentes -->
+            <div class="table-container">
+                <div class="table-header">
+                    <h2>Ventes récentes</h2>
+                    <a href="ventes.html" class="btn-primary">
+                        <i class="fas fa-plus"></i> Nouvelle vente
+                    </a>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>N° Facture</th>
+                            <th>Client</th>
+                            <th>Date</th>
+                            <th>Montant</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ventesRecentesTable">
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Graphique des ventes -->
+            <div class="chart-container">
+                <h2>Évolution des ventes (7 derniers jours)</h2>
+                <canvas id="ventesChart" width="400" height="200"></canvas>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

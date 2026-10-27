@@ -1,0 +1,123 @@
+<%- include('../partials/header', {title: title}) %>
+<div class="app-container">
+  <%- include('../partials/sidebar') %>
+  <main class="main-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        <h1>Tableau de Bord</h1>
+        <p>Vue d'ensemble de votre boutique</p>
+      </div>
+      <div class="topbar-right">
+        <div class="user-info">
+          <i class="fas fa-user-circle"></i>
+          <span><%= user.prenom %> <%= user.nom %> - <strong><%= user.role.toUpperCase() %></strong></span>
+        </div>
+        <a href="/auth/logout" class="btn-logout"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
+      </div>
+    </header>
+
+    <section class="kpi-grid">
+      <div class="kpi-card blue">
+        <div class="kpi-icon"><i class="fas fa-cash-register"></i></div>
+        <div class="kpi-info">
+          <h3><%= caJour.toLocaleString() %> UM</h3>
+          <p>CA du Jour</p>
+        </div>
+      </div>
+      <div class="kpi-card green">
+        <div class="kpi-icon"><i class="fas fa-chart-bar"></i></div>
+        <div class="kpi-info">
+          <h3><%= caMois.toLocaleString() %> UM</h3>
+          <p>CA du Mois</p>
+        </div>
+      </div>
+      <div class="kpi-card orange">
+        <div class="kpi-icon"><i class="fas fa-coins"></i></div>
+        <div class="kpi-info">
+          <h3><%= beneficeJour.toLocaleString() %> UM</h3>
+          <p>Bénéfice du Jour</p>
+        </div>
+      </div>
+      <div class="kpi-card purple">
+        <div class="kpi-icon"><i class="fas fa-wallet"></i></div>
+        <div class="kpi-info">
+          <h3><%= beneficeNetMois.toLocaleString() %> UM</h3>
+          <p>Bénéfice Net Mois</p>
+        </div>
+      </div>
+      <div class="kpi-card red">
+        <div class="kpi-icon"><i class="fas fa-hand-holding-usd"></i></div>
+        <div class="kpi-info">
+          <h3><%= totalCreances.toLocaleString() %> UM</h3>
+          <p>Créances en cours</p>
+        </div>
+      </div>
+      <div class="kpi-card teal">
+        <div class="kpi-icon"><i class="fas fa-exclamation-triangle"></i></div>
+        <div class="kpi-info">
+          <h3><%= stockFaible %></h3>
+          <p>Articles en alerte stock</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid-2">
+      <div class="panel">
+        <div class="panel-header">
+          <h3><i class="fas fa-history"></i> Ventes Récentes</h3>
+          <a href="/ventes">Voir tout</a>
+        </div>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr><th>N° Facture</th><th>Client</th><th>Type</th><th>Total</th><th>Date</th></tr>
+            </thead>
+            <tbody>
+              <% if(ventesRecentes && ventesRecentes.length > 0) { %>
+                <% ventesRecentes.forEach(v => { %>
+                  <tr>
+                    <td><%= v.numeroFacture %></td>
+                    <td><%= v.client ? (v.client.prenom + ' ' + v.client.nom) : 'Anonyme' %></td>
+                    <td><span class="badge <%= v.typeVente === 'CREDIT' ? 'badge-warning' : 'badge-success' %>"><%= v.typeVente %></span></td>
+                    <td><%= v.total.toLocaleString() %> UM</td>
+                    <td><%= v.dateVente.toLocaleString('fr-FR') %></td>
+                  </tr>
+                <% }) %>
+              <% } else { %>
+                <tr><td colspan="5" style="text-align:center">Aucune vente</td></tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-header">
+          <h3><i class="fas fa-exclamation-circle"></i> Alertes Stock Faible</h3>
+          <a href="/stocks">Gérer</a>
+        </div>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr><th>Réf</th><th>Désignation</th><th>Stock</th><th>Seuil Min</th></tr>
+            </thead>
+            <tbody>
+              <% if(stockFaibleList && stockFaibleList.length > 0) { %>
+                <% stockFaibleList.forEach(a => { %>
+                  <tr>
+                    <td><%= a.reference %></td>
+                    <td><%= a.designation %></td>
+                    <td class="text-danger"><strong><%= a.stockActuel %></strong></td>
+                    <td><%= a.stockMin %></td>
+                  </tr>
+                <% }) %>
+              <% } else { %>
+                <tr><td colspan="4" style="text-align:center">Aucune alerte</td></tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+<%- include('../partials/footer') %>

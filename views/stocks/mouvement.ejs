@@ -1,0 +1,58 @@
+<%- include('../partials/header', {title: title}) %>
+<div class="app-container">
+  <%- include('../partials/sidebar') %>
+  <main class="main-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        <h1>Mouvement de Stock</h1>
+        <p>Ajout, retrait, ajustement avec motif obligatoire</p>
+      </div>
+      <div class="topbar-right">
+        <a href="/stocks" class="btn" style="background:#64748b;color:white"><i class="fas fa-arrow-left"></i> Retour Stocks</a>
+      </div>
+    </header>
+
+    <div class="panel" style="max-width:700px">
+      <div class="panel-header">
+        <h3><i class="fas fa-exchange-alt"></i> Effectuer un mouvement</h3>
+      </div>
+      <div style="padding:30px">
+        <form action="/stocks/mouvement" method="POST">
+          <div class="form-group">
+            <label>Article *</label>
+            <select name="articleId" required>
+              <option value="">-- Sélectionner un article --</option>
+              <% articles.forEach(a => { %>
+                <option value="<%= a._id %>"><%= a.reference %> - <%= a.designation %> (Stock: <%= a.stockActuel %>)</option>
+              <% }) %>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Type de mouvement *</label>
+            <select name="typeMouvement" required>
+              <option value="">-- Choisir --</option>
+              <option value="ENTREE">ENTRÉE (Ajout de stock)</option>
+              <option value="SORTIE">SORTIE (Retrait de stock)</option>
+              <option value="AJUSTEMENT">AJUSTEMENT (Mettre à jour le stock)</option>
+              <option value="CORRECTION">CORRECTION</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Quantité *</label>
+            <input type="number" name="quantite" min="0" required>
+          </div>
+          <div class="form-group">
+            <label>Motif / Justification *</label>
+            <input type="text" name="motif" placeholder="Ex: Achat fournisseur, Cassure, Inventaire..." required>
+          </div>
+          <div class="form-group">
+            <label>Référence (N° Bon, Facture fournisseur...)</label>
+            <input type="text" name="reference">
+          </div>
+          <button type="submit" class="btn btn-primary"><i class="fas fa-check"></i> Valider le mouvement</button>
+        </form>
+      </div>
+    </div>
+  </main>
+</div>
+<%- include('../partials/footer') %>

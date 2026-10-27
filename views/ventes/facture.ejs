@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facture <%= vente.numeroFacture %></title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+            background-color: #8fa0b5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .invoice-container {
+            width: 800px;
+            background: #ffffff;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            padding-bottom: 50px;
+        }
+
+        .header-bg {
+            background: linear-gradient(135deg, #4263b1 0%, #4667ba 50%, #3e5ba4 100%);
+            color: #ffffff;
+            padding: 40px 50px 90px 50px;
+            border-bottom-left-radius: 40px;
+            border-bottom-right-radius: 40px;
+            position: relative;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 40px;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-dots {
+            display: grid;
+            grid-template-columns: repeat(3, 6px);
+            gap: 4px;
+        }
+
+        .logo-dots span {
+            width: 6px;
+            height: 6px;
+            background-color: #ff5252;
+            border-radius: 50%;
+        }
+
+        .brand-text h1 {
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            line-height: 1;
+        }
+
+        .brand-text p {
+            font-size: 9px;
+            letter-spacing: 1.5px;
+            opacity: 0.8;
+            margin-top: 3px;
+            font-weight: 600;
+        }
+
+        .contact-details {
+            text-align: right;
+            font-size: 11px;
+            line-height: 1.5;
+            opacity: 0.9;
+        }
+
+        .contact-details h3 {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+        }
+
+        .invoice-info {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .info-group h4 {
+            font-size: 13px;
+            font-weight: 500;
+            opacity: 0.85;
+            margin-bottom: 4px;
+        }
+
+        .info-group p {
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .content-area {
+            padding: 0 50px;
+            margin-top: -45px;
+        }
+
+        .table-header {
+            background-color: #eeeeee;
+            border-radius: 25px;
+            display: grid;
+            grid-template-columns: 60px 1fr 120px 80px 120px;
+            padding: 16px 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-bottom: 10px;
+        }
+
+        .table-header div {
+            font-size: 12px;
+            font-weight: 700;
+            color: #4a4a4a;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .table-row {
+            display: grid;
+            grid-template-columns: 60px 1fr 120px 80px 120px;
+            padding: 12px 20px;
+            font-size: 12px;
+            color: #555;
+            border-bottom: 1px solid #f0f0f0;
+            align-items: center;
+        }
+
+        .text-center { text-align: center; }
+        .text-right { text-align: right; }
+
+        .bottom-section {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+        }
+
+        .left-notes {
+            width: 50%;
+        }
+
+        .notes-card {
+            background-color: #f7f7f7;
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 20px;
+            font-size: 11px;
+            color: #666;
+        }
+
+        .notes-card h5 {
+            font-size: 11px;
+            color: #333;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .payment-grid {
+            display: grid;
+            grid-template-columns: 100px 1fr;
+            gap: 6px;
+            line-height: 1.4;
+        }
+
+        .totals-area {
+            width: 40%;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            font-size: 13px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            padding: 6px 0;
+            color: #555;
+            font-weight: 600;
+        }
+
+        .total-box {
+            background-color: #3e5ba4;
+            color: white;
+            border-radius: 8px;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 15px;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .signature-area {
+            margin-top: 50px;
+            text-align: center;
+            border-top: 1px solid #ddd;
+            padding-top: 8px;
+            width: 180px;
+            font-size: 11px;
+            color: #777;
+        }
+
+        .footer-banner {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 65%;
+            background-color: #3e5ba4;
+            color: white;
+            text-align: center;
+            padding: 8px 0;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .actions-print {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        .actions-print button, .actions-print a {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            color: white;
+        }
+        @media print {
+            body { background: white; padding: 0; }
+            .actions-print { display: none; }
+            .invoice-container { box-shadow: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="actions-print">
+        <button onclick="window.print()" style="background:#22c55e"><i class="fas fa-print"></i> Imprimer</button>
+        <a href="/ventes/facture/pdf/<%= vente._id %>" style="background:#ef4444"><i class="fas fa-file-pdf"></i> PDF</a>
+        <a href="/ventes" style="background:#64748b">Retour</a>
+    </div>
+
+    <div class="invoice-container">
+        <div class="header-bg">
+            <div class="header-top">
+                <div class="logo-area">
+                    <div class="logo-dots">
+                        <span></span><span></span><span></span>
+                        <span></span><span></span><span></span>
+                        <span></span><span></span><span></span>
+                    </div>
+                    <div class="brand-text">
+                        <h1>GESTION BOUTIQUE</h1>
+                        <p>PRO</p>
+                    </div>
+                </div>
+                <div class="contact-details">
+                    <h3>CONTACT</h3>
+                    <p>Boutique Commerciale</p>
+                    <p>Tel: +XXX XXX XXX XXX</p>
+                    <p>contact@boutique.com</p>
+                </div>
+            </div>
+
+            <div class="invoice-info">
+                <div class="info-group">
+                    <h4>Facturé à</h4>
+                    <% if(vente.client) { %>
+                        <p><%= vente.client.prenom %> <%= vente.client.nom %></p>
+                        <p style="font-weight: 400; font-size: 12px;"><%= vente.client.telephone %></p>
+                    <% } else { %>
+                        <p>Client Anonyme</p>
+                    <% } %>
+                </div>
+                <div style="display:flex;gap:40px">
+                    <div class="info-group">
+                        <h4>N° Facture</h4>
+                        <p><%= vente.numeroFacture %></p>
+                    </div>
+                    <div class="info-group">
+                        <h4>Date</h4>
+                        <p><%= vente.dateVente.toLocaleDateString('fr-FR') %></p>
+                        <p style="font-weight:400;font-size:11px"><%= vente.dateVente.toLocaleTimeString('fr-FR') %></p>
+                    </div>
+                    <div class="info-group">
+                        <h4>Type</h4>
+                        <p><%= vente.typeVente %></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-area">
+            <div class="table-header">
+                <div>NO.</div>
+                <div>DESIGNATION</div>
+                <div class="text-center">PRIX UNITAIRE</div>
+                <div class="text-center">QTÉ</div>
+                <div class="text-right">MONTANT</div>
+            </div>
+
+            <% lignes.forEach((l, index) => { %>
+            <div class="table-row">
+                <div><%= index + 1 %>.</div>
+                <div><%= l.designation %></div>
+                <div class="text-center"><%= l.prixUnitaire.toLocaleString() %> FCFA</div>
+                <div class="text-center"><%= l.quantite %></div>
+                <div class="text-right"><%= l.montantLigne.toLocaleString() %> FCFA</div>
+            </div>
+            <% }) %>
+
+            <div class="bottom-section">
+                <div class="left-notes">
+                    <div class="notes-card">
+                        <h5>INFORMATIONS</h5>
+                        <div class="payment-grid">
+                            <span>Vendeur</span><span>: <%= vente.vendeur ? (vente.vendeur.prenom + ' ' + vente.vendeur.nom) : '-' %></span>
+                            <span>Mode Paiement</span><span>: <%= vente.modePaiement %></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="totals-area">
+                    <div class="summary-row">
+                        <span>Sous-total</span>
+                        <span><%= vente.sousTotal.toLocaleString() %> FCFA</span>
+                    </div>
+                    <% if(vente.remise > 0) { %>
+                    <div class="summary-row">
+                        <span>Remise</span>
+                        <span>- <%= vente.remise.toLocaleString() %> FCFA</span>
+                    </div>
+                    <% } %>
+
+                    <div class="total-box">
+                        <span>TOTAL</span>
+                        <span><%= vente.total.toLocaleString() %> FCFA</span>
+                    </div>
+
+                    <div class="signature-area">
+                        Signature & Cachet
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-banner">
+            Merci de votre confiance !
+        </div>
+    </div>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</body>
+</html>

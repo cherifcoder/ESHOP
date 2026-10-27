@@ -1,0 +1,68 @@
+<%- include('../partials/header', {title: title}) %>
+<div class="app-container">
+  <%- include('../partials/sidebar') %>
+  <main class="main-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        <h1>Journal des Mouvements de Stock</h1>
+        <p>Traçabilité complète de toutes les actions</p>
+      </div>
+      <div class="topbar-right">
+        <a href="/stocks" class="btn" style="background:#64748b;color:white"><i class="fas fa-arrow-left"></i> Retour</a>
+      </div>
+    </header>
+
+    <div class="panel">
+      <div class="panel-header">
+        <h3><i class="fas fa-history"></i> Historique (200 derniers mouvements)</h3>
+      </div>
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Date/Heure</th>
+              <th>Article</th>
+              <th>Type</th>
+              <th>Qté</th>
+              <th>Stock Avant</th>
+              <th>Stock Après</th>
+              <th>Motif</th>
+              <th>Référence</th>
+              <th>Effectué par</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if(mouvements && mouvements.length > 0) { %>
+              <% mouvements.forEach(m => { %>
+                <tr>
+                  <td><%= m.dateMouvement.toLocaleString('fr-FR') %></td>
+                  <td><%= m.article ? m.article.designation : '-' %></td>
+                  <td>
+                    <% if(m.typeMouvement === 'ENTREE') { %>
+                      <span class="badge badge-success">ENTRÉE</span>
+                    <% } else if(m.typeMouvement === 'SORTIE') { %>
+                      <span class="badge badge-danger">SORTIE</span>
+                    <% } else if(m.typeMouvement === 'AJUSTEMENT') { %>
+                      <span class="badge badge-warning">AJUSTEMENT</span>
+                    <% } else { %>
+                      <span class="badge badge-info"><%= m.typeMouvement %></span>
+                    <% } %>
+                  </td>
+                  <td><strong><%= m.quantite %></strong></td>
+                  <td><%= m.stockAvant %></td>
+                  <td><%= m.stockApres %></td>
+                  <td><%= m.motif %></td>
+                  <td><%= m.reference || '-' %></td>
+                  <td><%= m.effectuePar ? (m.effectuePar.prenom + ' ' + m.effectuePar.nom) : '-' %></td>
+                </tr>
+              <% }) %>
+            <% } else { %>
+              <tr><td colspan="9" style="text-align:center;padding:40px">Aucun mouvement</td></tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+<%- include('../partials/footer') %>

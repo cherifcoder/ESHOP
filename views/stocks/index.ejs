@@ -1,0 +1,81 @@
+<%- include('../partials/header', {title: title}) %>
+<div class="app-container">
+  <%- include('../partials/sidebar') %>
+  <main class="main-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        <h1>Gestion des Stocks</h1>
+        <p>État, inventaire et alertes</p>
+      </div>
+      <div class="topbar-right">
+        <% if(user.role === 'admin' || user.role === 'manager') { %>
+          <a href="/stocks/mouvement" class="btn btn-primary"><i class="fas fa-exchange-alt"></i> Mouvement de Stock</a>
+          <a href="/stocks/journal" class="btn btn-info"><i class="fas fa-clipboard-list"></i> Journal</a>
+        <% } %>
+        <div class="user-info">
+          <i class="fas fa-user-circle"></i>
+          <span><%= user.prenom %> <%= user.nom %> - <%= user.role.toUpperCase() %></span>
+        </div>
+      </div>
+    </header>
+
+    <div class="panel">
+      <div class="panel-header">
+        <h3><i class="fas fa-warehouse"></i> Inventaire Complet</h3>
+      </div>
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Réf</th>
+              <th>Image</th>
+              <th>Désignation</th>
+              <th>Catégorie</th>
+              <th>Stock Actuel</th>
+              <th>Stock Min</th>
+              <th>P.Achat</th>
+              <th>P.Vente</th>
+              <th>Valeur (P.A)</th>
+              <th>Statut</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if(articles && articles.length > 0) { %>
+              <% articles.forEach(a => { %>
+                <tr>
+                  <td><%= a.reference %></td>
+                  <td>
+                    <% if(a.images && a.images.length > 0) { %>
+                      <img src="/uploads/articles/<%= a.images[0] %>" width="40" height="40" style="border-radius:6px;object-fit:cover">
+                    <% } else { %>
+                      <i class="fas fa-image" style="color:#cbd5e1"></i>
+                    <% } %>
+                  </td>
+                  <td><%= a.designation %></td>
+                  <td><%= a.categorie || '-' %></td>
+                  <td><strong class="<%= a.stockActuel <= a.stockMin ? 'text-danger' : '' %>"><%= a.stockActuel %></strong> <%= a.unite %></td>
+                  <td><%= a.stockMin %></td>
+                  <td><%= a.prixAchat.toLocaleString() %> FCFA</td>
+                  <td><%= a.prixVente.toLocaleString() %> FCFA</td>
+                  <td><%= (a.stockActuel * a.prixAchat).toLocaleString() %> UM</td>
+                  <td>
+                    <% if(a.stockActuel <= a.stockMin) { %>
+                      <span class="badge badge-danger"><i class="fas fa-exclamation-triangle"></i> FAIBLE</span>
+                    <% } else if(a.stockActuel === 0) { %>
+                      <span class="badge badge-danger">RUPTURE</span>
+                    <% } else { %>
+                      <span class="badge badge-success"><i class="fas fa-check"></i> OK</span>
+                    <% } %>
+                  </td>
+                </tr>
+              <% }) %>
+            <% } else { %>
+              <tr><td colspan="10" style="text-align:center;padding:40px">Aucun article</td></tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+<%- include('../partials/footer') %>

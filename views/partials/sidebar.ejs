@@ -1,0 +1,29 @@
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <i class="fas fa-store"></i>
+    <h2>GESTION BOUTIQUE</h2>
+    <small>PRO v2.0</small>
+  </div>
+  <nav class="sidebar-menu">
+    <a href="/dashboard" class="menu-item <%= typeof currentPath !== 'undefined' && currentPath === '/dashboard' ? 'active' : '' %>">
+      <i class="fas fa-chart-pie"></i> <span>Tableau de Bord</span>
+    </a>
+    <div class="menu-section">VENTES</div>
+    <a href="/ventes/nouvelle" class="menu-item"><i class="fas fa-cart-plus"></i> <span>Nouvelle Vente</span></a>
+    <a href="/ventes" class="menu-item"><i class="fas fa-file-invoice"></i> <span>Historique Ventes</span></a>
+    <a href="/credits" class="menu-item"><i class="fas fa-hand-holding-usd"></i> <span>Crédits & Remboursements</span></a>
+    <div class="menu-section">GESTION</div>
+    <a href="/articles" class="menu-item"><i class="fas fa-boxes"></i> <span>Articles</span></a>
+    <a href="/clients" class="menu-item"><i class="fas fa-users"></i> <span>Clients</span></a>
+    <a href="/stocks" class="menu-item"><i class="fas fa-warehouse"></i> <span>Stocks</span></a>
+    <a href="/stocks/journal" class="menu-item"><i class="fas fa-clipboard-list"></i> <span>Journal Mouvements</span></a>
+    <a href="/depenses" class="menu-item"><i class="fas fa-money-bill-wave"></i> <span>Dépenses</span></a>
+    <div class="menu-section">ANALYSE</div>
+    <a href="/rapports" class="menu-item"><i class="fas fa-chart-line"></i> <span>Rapports & Graphiques</span></a>
+    <% if(user && user.role === 'admin') { %>
+      <div class="menu-section">ADMINISTRATION</div>
+      <a href="/users" class="menu-item"><i class="fas fa-user-cog"></i> <span>Utilisateurs</span></a>
+      <a href="/logs" class="menu-item"><i class="fas fa-history"></i> <span>Journalisation</span></a>
+    <% } %>
+  </nav>
+</aside>

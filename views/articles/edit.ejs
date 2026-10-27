@@ -1,0 +1,105 @@
+<%- include('../partials/header', {title: title}) %>
+<div class="app-container">
+  <%- include('../partials/sidebar') %>
+  <main class="main-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        <h1>Modifier un Article</h1>
+        <p>Mettre à jour les informations</p>
+      </div>
+      <div class="topbar-right">
+        <a href="/articles" class="btn" style="background:#64748b;color:white"><i class="fas fa-arrow-left"></i> Retour</a>
+      </div>
+    </header>
+
+    <div class="panel" style="max-width:1000px">
+      <div class="panel-header">
+        <h3><i class="fas fa-edit"></i> Informations de l'article</h3>
+      </div>
+      <div style="padding:30px">
+        <form action="/articles/modifier/<%= article._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+          <div class="grid-2">
+            <div class="form-group">
+              <label>Référence *</label>
+              <input type="text" name="reference" value="<%= article.reference %>" required>
+            </div>
+            <div class="form-group">
+              <label>Désignation *</label>
+              <input type="text" name="designation" value="<%= article.designation %>" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea name="description" rows="3"><%= article.description || '' %></textarea>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label>Catégorie *</label>
+              <select name="categorie" required>
+                <option value="">-- Sélectionner --</option>
+                <option value="Electroménager" <%= article.categorie === 'Electroménager' ? 'selected' : '' %>>Électroménager</option>
+                <option value="Informatique" <%= article.categorie === 'Informatique' ? 'selected' : '' %>>Informatique</option>
+                <option value="Electronique" <%= article.categorie === 'Electronique' ? 'selected' : '' %>>Électronique</option>
+                <option value="Alimentation" <%= article.categorie === 'Alimentation' ? 'selected' : '' %>>Alimentation</option>
+                <option value="Soins et beauté" <%= article.categorie === 'Soins et beauté' ? 'selected' : '' %>>Soins et beauté</option>
+                <option value="Hygiène" <%= article.categorie === 'Hygiène' ? 'selected' : '' %>>Hygiène</option>
+                <option value="Vêtements" <%= article.categorie === 'Vêtements' ? 'selected' : '' %>>Vêtements</option>
+                <option value="Chaussures" <%= article.categorie === 'Chaussures' ? 'selected' : '' %>>Chaussures</option>
+                <option value="Maison et décoration" <%= article.categorie === 'Maison et décoration' ? 'selected' : '' %>>Maison et décoration</option>
+                <option value="Bricolage" <%= article.categorie === 'Bricolage' ? 'selected' : '' %>>Bricolage</option>
+                <option value="Jouets" <%= article.categorie === 'Jouets' ? 'selected' : '' %>>Jouets</option>
+                <option value="Sport et loisir" <%= article.categorie === 'Sport et loisir' ? 'selected' : '' %>>Sport et loisir</option>
+                <option value="Automobile" <%= article.categorie === 'Automobile' ? 'selected' : '' %>>Automobile</option>
+                <option value="Autre" <%= article.categorie === 'Autre' ? 'selected' : '' %>>Autre</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Marque</label>
+              <input type="text" name="marque" value="<%= article.marque || '' %>">
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label>Prix d'Achat (UM) *</label>
+              <input type="number" name="prixAchat" step="0.01" min="0" value="<%= article.prixAchat %>" required>
+            </div>
+            <div class="form-group">
+              <label>Prix de Vente (UM) *</label>
+              <input type="number" name="prixVente" step="0.01" min="0" value="<%= article.prixVente %>" required>
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label>Stock Minimum *</label>
+              <input type="number" name="stockMin" min="0" value="<%= article.stockMin %>" required>
+            </div>
+            <div class="form-group">
+              <label>Unité</label>
+              <input type="text" name="unite" value="<%= article.unite %>">
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label>Fournisseur</label>
+              <input type="text" name="fournisseur" value="<%= article.fournisseur || '' %>">
+            </div>
+            <div class="form-group">
+              <label>Emplacement</label>
+              <input type="text" name="emplacement" value="<%= article.emplacement || '' %>">
+            </div>
+          </div>
+          <div class="form-group" style="display:flex;align-items:center;gap:10px">
+            <input type="checkbox" name="actif" <%= article.actif ? 'checked' : '' %>>
+            <label style="margin:0">Article actif</label>
+          </div>
+          <div class="form-group">
+            <label>Nouvelles images (JPG, PNG, GIF, WEBP)</label>
+            <input type="file" name="images" multiple accept="image/*">
+          </div>
+          <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Mettre à jour</button>
+        </form>
+      </div>
+    </div>
+  </main>
+</div>
+<%- include('../partials/footer') %>

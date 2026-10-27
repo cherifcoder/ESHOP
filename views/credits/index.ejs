@@ -1,0 +1,67 @@
+<%- include('../partials/header', {title: title}) %>
+<div class="app-container">
+  <%- include('../partials/sidebar') %>
+  <main class="main-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        <h1>Crédits Clients</h1>
+        <p>Suivi des créances et remboursements</p>
+      </div>
+    </header>
+
+    <div class="panel">
+      <div class="panel-header">
+        <h3><i class="fas fa-hand-holding-usd"></i> Crédits en cours</h3>
+      </div>
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Client</th>
+              <th>N° Facture</th>
+              <th>Montant Initial</th>
+              <th>Montant Payé</th>
+              <th>Reste à Payer</th>
+              <th>Statut</th>
+              <th>Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if(credits && credits.length > 0) { %>
+              <% credits.forEach(c => { %>
+                <tr>
+                  <td><strong><%= c.client ? (c.client.prenom + ' ' + c.client.nom) : '-' %></strong><br><small><%= c.client ? c.client.telephone : '' %></small></td>
+                  <td><%= c.vente ? c.vente.numeroFacture : '-' %></td>
+                  <td><%= c.montantInitial.toLocaleString() %> UM</td>
+                  <td><%= c.montantPaye.toLocaleString() %> UM</td>
+                  <td><strong class="text-danger"><%= c.montantRestant.toLocaleString() %> UM</strong></td>
+                  <td>
+                    <% if(c.statut === 'OUVERT') { %>
+                      <span class="badge badge-danger">OUVERT</span>
+                    <% } else if(c.statut === 'PARTIEL') { %>
+                      <span class="badge badge-warning">PARTIEL</span>
+                    <% } else if(c.statut === 'SOLDE') { %>
+                      <span class="badge badge-success">SOLDE</span>
+                    <% } %>
+                  </td>
+                  <td><%= c.createdAt.toLocaleDateString('fr-FR') %></td>
+                  <td>
+                    <% if(c.statut !== 'SOLDE') { %>
+                      <a href="/credits/rembourser/<%= c._id %>" class="btn btn-success" style="padding:6px 12px"><i class="fas fa-money-bill"></i> Rembourser</a>
+                    <% } else { %>
+                      <span class="badge badge-success">Soldé</span>
+                    <% } %>
+                  </td>
+                </tr>
+              <% }) %>
+            <% } else { %>
+              <tr><td colspan="8" style="text-align:center;padding:40px">Aucun crédit en cours</td></tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+<%- include('../partials/footer') %>

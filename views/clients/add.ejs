@@ -1,0 +1,62 @@
+<%- include('../partials/header', {title: title}) %>
+<div class="app-container">
+  <%- include('../partials/sidebar') %>
+  <main class="main-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        <h1>Ajouter un Client</h1>
+      </div>
+      <div class="topbar-right">
+        <a href="/clients" class="btn" style="background:#64748b;color:white"><i class="fas fa-arrow-left"></i> Retour</a>
+      </div>
+    </header>
+
+    <div class="panel" style="max-width:700px">
+      <div class="panel-header">
+        <h3><i class="fas fa-user-plus"></i> Informations Client</h3>
+      </div>
+      <div style="padding:30px">
+        <form action="/clients/ajouter" method="POST">
+          <div class="grid-2">
+            <div class="form-group">
+              <label>Nom *</label>
+              <input type="text" name="nom" required>
+            </div>
+            <div class="form-group">
+              <label>Prénom *</label>
+              <input type="text" name="prenom" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Téléphone *</label>
+            <input type="text" name="telephone" required>
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" name="email">
+          </div>
+          <div class="form-group">
+            <label>Adresse</label>
+            <input type="text" name="adresse">
+          </div>
+          <div class="form-group">
+            <label>Ville</label>
+            <input type="text" name="ville">
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label>Plafond Crédit (FCFA)</label>
+              <input type="number" name="plafondCredit" value="0">
+            </div>
+            <div class="form-group" style="display:flex;align-items:center;gap:10px;padding-top:25px">
+              <input type="checkbox" name="autoriserCredit" checked>
+              <label style="margin:0">Autoriser le crédit</label>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Enregistrer</button>
+        </form>
+      </div>
+    </div>
+  </main>
+</div>
+<%- include('../partials/footer') %>

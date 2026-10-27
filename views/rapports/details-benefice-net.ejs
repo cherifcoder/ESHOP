@@ -1,0 +1,72 @@
+<%- include('../partials/header', {title: title}) %>
+<div class="app-container">
+  <%- include('../partials/sidebar') %>
+  <main class="main-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        <h1>Détail du Bénéfice Net</h1>
+        <p>Bénéfice Brut - Dépenses</p>
+      </div>
+      <div class="topbar-right">
+        <a href="/rapports" class="btn" style="background:#64748b;color:white"><i class="fas fa-arrow-left"></i> Retour</a>
+      </div>
+    </header>
+
+    <div class="kpi-grid">
+      <div class="kpi-card orange">
+        <div class="kpi-icon"><i class="fas fa-coins"></i></div>
+        <div class="kpi-info">
+          <h3><%= beneficeBrut.toLocaleString() %> UM</h3>
+          <p>Bénéfice Brut</p>
+        </div>
+      </div>
+      <div class="kpi-card red">
+        <div class="kpi-icon"><i class="fas fa-arrow-down"></i></div>
+        <div class="kpi-info">
+          <h3>- <%= totalDepenses.toLocaleString() %> UM</h3>
+          <p>Total Dépenses</p>
+        </div>
+      </div>
+      <div class="kpi-card purple">
+        <div class="kpi-icon"><i class="fas fa-wallet"></i></div>
+        <div class="kpi-info">
+          <h3><%= beneficeNet.toLocaleString() %> UM</h3>
+          <p>Bénéfice Net</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header">
+        <h3><i class="fas fa-list"></i> Liste des Dépenses du Mois</h3>
+      </div>
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Libellé</th>
+              <th>Catégorie</th>
+              <th>Montant</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if(depenses && depenses.length > 0) { %>
+              <% depenses.forEach(d => { %>
+                <tr>
+                  <td><%= d.dateDepense.toLocaleDateString('fr-FR') %></td>
+                  <td><%= d.libelle %></td>
+                  <td><%= d.categorie %></td>
+                  <td style="color:#dc2626"><strong>- <%= d.montant.toLocaleString() %> UM</strong></td>
+                </tr>
+              <% }) %>
+            <% } else { %>
+              <tr><td colspan="4" style="text-align:center;padding:40px">Aucune dépense</td></tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+<%- include('../partials/footer') %>

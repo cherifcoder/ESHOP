@@ -62,7 +62,11 @@ app.use((req, res) => {
   res.status(404).render('errors/404', { title: 'Page non trouvée', user: req.session.user });
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`🚀 Serveur démarré sur http://localhost:${PORT}`);
-});
+if (require.main === module) {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log(`🚀 Serveur démarré sur http://localhost:${PORT}`);
+  });
+}
+
+module.exports = app;

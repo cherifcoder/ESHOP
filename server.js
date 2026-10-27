@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const session = require('express-session');
-const MongoStore = require('connect-mongo').default || require('connect-mongo');
+const MongoStore = require('connect-mongo');
 const methodOverride = require('method-override');
 const path = require('path');
 const connectDB = require('./config/db');
@@ -9,7 +9,11 @@ const flash = require('connect-flash');
 
 const app = express();
 
-connectDB();
+try {
+  connectDB();
+} catch (e) {
+  console.error(e);
+}
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -19,14 +23,22 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
+let sessionStore;
+try {
+  sessionStore = MongoStore.create({
+    mongoUrl: process.env.MONGODB_URI,
+    touchAfter: 24 * 3600
+  });
+} catch (e) {
+  sessionStore = new session.MemoryStore();
+}
+
 app.use(session({
   secret: process.env.SESSION_SECRET || 'secret',
   resave: false,
   saveUninitialized: false,
-  store: MongoStore.create({
-    mongoUrl: process.env.MONGODB_URI
-  }),
-  cookie: { maxAge: 1000 * 60 * 60 * 8 }
+  store: sessionStore,
+  cookie: { maxAge: 1000 * 60 * 60 * 8, secure: process.env.NODE_ENV === 'production' }
 }));
 
 app.use(flash());

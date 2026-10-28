@@ -6,8 +6,13 @@
   --dark: #1e293b;
   --light: #f8fafc;
   --border: #e2e8f0;
+} 
+.logo-cercle {
+    width: 150px;       /* Ajustez la taille selon vos besoins */
+    height: 150px;      /* Doit être identique à la largeur pour faire un cercle parfait */
+    border-radius: 50%; /* Arrondit les bords à 100% */
+    object-fit: cover;  /* Évite la déformation de l'image */
 }
-
 * { margin:0; padding:0; box-sizing:border-box; font-family: 'Inter', system-ui, -apple-system, sans-serif; }
 body { background:#f1f5f9; color:#334155; line-height:1.6; }
 

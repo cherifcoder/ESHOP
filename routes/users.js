@@ -5,7 +5,7 @@ const { isAuthenticated } = require('../middlewares/auth');
 const { checkRole } = require('../middlewares/checkRole');
 const { logAction } = require('../middlewares/logger');
 
-router.get('/', isAuthenticated, checkRole('admin'), async (req, res) => {
+router.get('/', isAuthenticated, checkRole('admin', 'superadmin'), async (req, res) => {
   try {
     const users = await User.find().sort({ createdAt: -1 });
     res.render('users/index', { title: 'Gestion des Utilisateurs', users, user: req.session.user });

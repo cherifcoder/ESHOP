@@ -8,7 +8,7 @@ const UserSchema = new mongoose.Schema({
   email: { type: String, trim: true, lowercase: true },
   telephone: { type: String, trim: true },
   password: { type: String, required: true },
-  role: { type: String, enum: ['admin', 'manager', 'vendeur', 'caissier', 'livreur'], default: 'vendeur' },
+  role: { type: String, enum: ['superadmin', 'admin', 'manager', 'vendeur', 'caissier', 'livreur'], default: 'vendeur' },
   actif: { type: Boolean, default: true },
   derniereConnexion: { type: Date },
   createdAt: { type: Date, default: Date.now },
